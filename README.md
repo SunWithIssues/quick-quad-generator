@@ -20,6 +20,25 @@ This is a quick python script for generating quad pairing sheets, particular mad
 
 The player's group position is shuffled with each call, as is normal for any round robin tournament.
 
+## Usage
+```
+usage: script.py [-h] [-nr] [-ns] [-b BOARD_NUM] [--html_only] [--pdf_only]
+                 path
+
+positional arguments:
+  path                  Path to the csv which will be used for generating the
+                        pairings.
+
+options:
+  -h, --help            show this help message and exit
+  -nr, --no_rating      Do not show rating information.
+  -ns, --no_sort        Do not sort table before pairing.
+  -b BOARD_NUM, --board_num BOARD_NUM
+                        Starting board number of first pairing.
+  --html_only           Creates only the html file component
+  --pdf_only            Creates only the pdf file component
+
+```
 ## Dependencies / Libraries
 
 Libraries Needed
