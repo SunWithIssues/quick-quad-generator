@@ -22,7 +22,10 @@ The player's group position is shuffled with each call, as is normal for any rou
 
 ## Usage
 ```
-usage: script.py [-h] [-nr] [-ns] [-b BOARD_NUM] [--html_only] [--pdf_only]
+usage: script.py [-h] [-nh] [-nr] [-ns] [-b BOARD_NUM] [--html_only]
+                 [--pdf_only] [--name_idx NAME_IDX [NAME_IDX ...]]
+                 [--name NAME [NAME ...]] [--rating_idx RATING_IDX]
+                 [--rating RATING]
                  path
 
 positional arguments:
@@ -31,12 +34,24 @@ positional arguments:
 
 options:
   -h, --help            show this help message and exit
+  -nh, --no_header      The csv has no column header information.
   -nr, --no_rating      Do not show rating information.
   -ns, --no_sort        Do not sort table before pairing.
   -b BOARD_NUM, --board_num BOARD_NUM
                         Starting board number of first pairing.
   --html_only           Creates only the html file component
   --pdf_only            Creates only the pdf file component
+  --name_idx NAME_IDX [NAME_IDX ...]
+                        Can manually set what column indexes have the players'
+                        names. This takes precendent over the --name flag.
+  --name NAME [NAME ...]
+                        Can manually set what column headers have the players'
+                        names.
+  --rating_idx RATING_IDX
+                        Can manually set what column index has the players'
+                        rating. This takes precendent over the --rating flag.
+  --rating RATING       Can manually set what column header has the players'
+                        rating.
 
 ```
 ## Dependencies / Libraries
@@ -51,15 +66,11 @@ Libraries Needed
 
 I made this program relatively quickly and so I did not see the need to have the program perform safety checks or the need for too many exception handlings. I list the known drawbacks, and quick ways to get around that without the need for adding/modifying the code. 
 
-1. The program expects that a player's name is contained in one column called "name". 
-   - FIX: Just rename player's name column in your original csv to "name"
-2. The program expects that a player's rating is contained in one column called "rating". 
-   - FIX: Just rename that column in your original csv to "rating"
-3. The rating column must only contain numerics (i.e. numbers) or the sort will be incorrect. 
+1. The rating column must only contain numerics (i.e. numbers) or the sort will be incorrect. 
    - FIX: As with the above modify csv to remove endings like "700P" or "Unrated"
-4. If a player withdraws from the tournament early, the crenshaw table might require color reversal. The program does not handle this. 
+2. If a player withdraws from the tournament early, the crenshaw table might require color reversal. The program does not handle this. 
    - FIX: (sadly) You must update the html by hand in this case.
-5. Does not check any database to see if ratings are upto date.
+3. Does not check any database to see if ratings are upto date.
 
 ## Updates
 

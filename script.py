@@ -9,6 +9,15 @@ import pdfkit
 
 ## Class / Functions
 
+class ColumnError(Exception):
+    def __init__(self, message, column_name):
+        super().__init__(message)
+        self.column_name = column_name
+
+    def __str__(self):
+        return f"Column <{self.column_name}> was not found. Check if set appropriately."
+
+
 class HtmlPrinter:
 	def __init__(self):
 		html = """<!DOCTYPE html>
@@ -115,7 +124,7 @@ class HtmlPrinter:
 
 
 class QuadTournament:
-	def __init__(self, players_dataframe, first_board_num=1, show_rating=True, must_sort=True):
+	def __init__(self, players_dataframe, name_column, rating_column, first_board_num=1, show_rating=True, must_sort=True):
 		self.hp = HtmlPrinter()
 		self.board_num = first_board_num 
 		self.df = players_dataframe
@@ -123,14 +132,16 @@ class QuadTournament:
 
 		self.must_sort = must_sort
 		self.show_rating = show_rating
-		self.print_pdf = print_pdf
+
+		self.rating_column = rating_column
+		self.name_column = name_column
 
 
 	def make_pairing_sheets(self, print_choice=0):
 		
 		# sort by ratings
 		if self.must_sort:
-			self.df.sort_values(by=['rating'], inplace=True, ascending=False)
+			self.df.sort_values(by=[self.rating_column], inplace=True, ascending=False)
 			self.df.reset_index(drop=True, inplace=True)
 
 		# count number of rows/players
@@ -141,7 +152,7 @@ class QuadTournament:
 			self._quadPrint(0, row_count - n)
 			self._swissPrintRound1(row_count - n, row_count)
 		else:                  # create quads for all
-			self._quadPrint(0, df.shape[0])
+			self._quadPrint(0, self.df.shape[0])
 
 		# create + save quads pdf / html file
 		if print_choice == 0:
@@ -161,10 +172,13 @@ class QuadTournament:
 
 
 	def _name_format(self, row):
-		s = self.df.loc[row, "name"] 
+
+		s = ""
+		for i in self.name_column:
+			s += str(self.df.loc[row, i]) + " "
 
 		if self.show_rating:
-			s += "( "+ str(self.df.loc[row, "rating"]) + " )"
+			s += " ( "+ str(self.df.loc[row, self.rating_column]) + " )"
 
 		return s
 
@@ -271,24 +285,59 @@ def main():
 
 	parser.add_argument("path", help="Path to the csv which will be used for generating the pairings.",
                     type=str)
+	parser.add_argument("-nh", "--no_header", help="The csv has no column header information.", action="store_true")
 	parser.add_argument("-nr", "--no_rating", help="Do not show rating information.",
                     action="store_false")
 	parser.add_argument("-ns", "--no_sort", help="Do not sort table before pairing.", action="store_false")
 	parser.add_argument("-b", "--board_num", help="Starting board number of first pairing.", type=int, default=1)
 	parser.add_argument("--html_only", help="Creates only the html file component", action="store_true")
 	parser.add_argument("--pdf_only", help="Creates only the pdf file component", action="store_true")
+	
+
+	parser.add_argument("--name_idx", nargs='+', type=int, help="Can manually set what column indexes have the players' names. This takes precendent over the --name flag.")
+	parser.add_argument("--name", nargs='+', type=str, help="Can manually set what column headers have the players' names.")
+	parser.add_argument("--rating_idx", type=int, help="Can manually set what column index has the players' rating. This takes precendent over the --rating flag.")
+	parser.add_argument("--rating", type=str, help="Can manually set what column header has the players' rating.")
 
 	args = parser.parse_args()
 
 	try:
-		df = pd.read_csv(args.path)
+
+		if(args.no_header):
+			df = pd.read_csv(args.path, header=None)
+		else:
+			df = pd.read_csv(args.path, header="infer")
+
 	except Exception as e:
 		raise
 		sys.exit(1)
 
 
+	try:
+		if args.rating_idx:
+			rating = df.columns[args.rating_idx]
+		elif args.rating and args.rating in df.columns:
+			rating = args.rating
+		else:
+			raise ColumnError("ColumnError:", "rating")
 
-	quads = QuadTournament(df, first_board_num=args.board_num, show_rating=args.no_rating, must_sort=args.no_sort)
+		if args.name_idx != None:
+			name = df.columns[args.name_idx]
+		elif args.name and args.name in df.columns:
+			name =  args.name
+		else:
+			raise ColumnError("ColumnError:", "name")
+
+	except Exception as e:
+		raise
+		sys.exit(1)
+
+
+	for n in name:
+		df[n] = df[n].fillna('')
+
+
+	quads = QuadTournament(df, name_column=name, rating_column=rating, first_board_num=args.board_num, show_rating=args.no_rating, must_sort=args.no_sort)
 
 	if(args.html_only == args.pdf_only ):
 		quads.make_pairing_sheets()
