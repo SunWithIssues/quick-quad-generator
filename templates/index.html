@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+		<head>
+			<title>Quad Pairing Sheets</title>
+        </head>
+        <body>
+            <div class="center">
+                <form method="POST" action="/" enctype="multipart/form-data">
+                    <input class="ok" type="file" name="file">
+                    
+                    <br>
+
+                    <p>Is there a header present?</p>
+                    <input type="radio" id="header_yes" name="header_present" value=1>
+                    <label for="header_yes">Yes</label><br>
+                    <input type="radio" id="header_no" name="header_present" value=0>
+                    <label for="header_no">No</label><br>
+
+                    <br>
+
+                    <p>Name Column Index</p>
+                    <input type="number" name="name_column_idx"><br>
+                    <p>Sort Column Index (Ratings Column)</p>
+                    <input type="number" name="sort_column_idx"><br>
+
+                    <br>
+
+                    <p>First Board Number</p>
+                    <input type="number" name="board_num"><br>
+
+                    <br>
+
+                    <p>Should it display the sorting column?</p>
+                    <input type="radio" id="display_sort" name="display_sort" value=1>
+                    <label for="header_yes">Yes</label><br>
+                    <input type="radio" id="display_sort" name="display_sort" value=0>
+                    <label for="header_no">No</label><br>
+
+                    <br>
+
+                    <p>Should it sort before pairing?</p>
+                    <input type="radio" id="must_sort" name="must_sort" value=1>
+                    <label for="header_yes">Yes</label><br>
+                    <input type="radio" id="must_sort" name="must_sort" value=0>
+                    <label for="header_no">No</label><br>
+
+                    <button class="op">Submit</button>
+                </form>
+            </div>
+        </body>
+</html>
