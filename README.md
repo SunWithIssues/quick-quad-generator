@@ -71,6 +71,8 @@ I made this program relatively quickly and so I did not see the need to have the
 2. If a player withdraws from the tournament early, the crenshaw table might require color reversal. The program does not handle this. 
    - FIX: (sadly) You must update the html by hand in this case.
 3. Does not check any database to see if ratings are upto date.
+4. MOST ANNOYING, when running a live tournament, there can be a lot of background considerations to pairing and going into the html to change pairings or manually sorting the csv is time consuming
+  - FIX: none at the moment.
 
 ## Updates
 
