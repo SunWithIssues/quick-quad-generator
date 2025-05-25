@@ -67,12 +67,11 @@ Libraries Needed
 I made this program relatively quickly and so I did not see the need to have the program perform safety checks or the need for too many exception handlings. I list the known drawbacks, and quick ways to get around that without the need for adding/modifying the code. 
 
 1. The rating column must only contain numerics (i.e. numbers) or the sort will be incorrect. 
-   - FIX: As with the above modify csv to remove endings like "700P" or "Unrated"
+   - FIX: Modify csv to remove endings like "700P" or "Unrated" or manually order the csv then perform pairing with `-ns` flag
 2. If a player withdraws from the tournament early, the crenshaw table might require color reversal. The program does not handle this. 
    - FIX: (sadly) You must update the html by hand in this case.
-3. Does not check any database to see if ratings are upto date.
-4. MOST ANNOYING, when running a live tournament, there can be a lot of background considerations to pairing and going into the html to change pairings or manually sorting the csv is time consuming
-  - FIX: none at the moment.
+3. MOST ANNOYING, when running a live tournament, there can be a lot of background considerations to pairing and going into the html to change pairings or manually sorting the csv is time consuming
+   - FIX: none at the moment.
 
 ## Updates
 
